@@ -16,7 +16,7 @@
   </style>
 </head>
 <body>
-  <h1>WiFi Connection Check</h1>
+  <h1>WiFi Connection Check improved</h1>
   <div id="status">Checking connection...</div>
   <div id="loader">⏳ Checking…</div>
   <button id="retryBtn" class="hidden">Try Again</button>
@@ -48,7 +48,7 @@
       try {
         const response = await fetch(CHECK_URL, {
           method: "GET",
-          cache: "no-cache",
+          cache: "no-store",
           signal: controller.signal
         });
         clearTimeout(timeout);
