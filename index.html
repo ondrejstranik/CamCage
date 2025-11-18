@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WiFi Connection Check</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="theme-color" content="#ffffff" />
+  <style>
+    body { font-family: Arial, sans-serif; margin: 25px; }
+    #loader { font-size: 20px; display: none; }
+    .hidden { display: none; }
+    button { padding: 12px 18px; font-size: 16px; margin-top: 15px; }
+  </style>
+</head>
+<body>
+  <h1>WiFi Connection Check</h1>
+  <div id="status">Checking connection...</div>
+  <div id="loader">⏳ Checking…</div>
+  <button id="retryBtn" class="hidden">Try Again</button>
+  <div id="wifiHelp" class="hidden">
+    <h3>Cannot reach the device</h3>
+    <p>Connect to the correct WiFi network:</p>
+    <b>SSID: MyNetwork</b><br>
+    <b>Password: mypassword123</b><br><br>
+    <button id="openWifiBtn">Open WiFi Settings</button>
+  </div>
+  <div id="successBox" class="hidden">
+    <h2>Connected!</h2>
+    <button id="continueBtn">Open Control Page</button>
+  </div>
+  <script>
+    const CHECK_URL = "http://192.168.4.1/ping";
+    const TIMEOUT_MS = 5000;
+
+    async function checkConnection() {
+      document.getElementById("status").textContent = "Checking connection...";
+      document.getElementById("loader").style.display = "block";
+      document.getElementById("wifiHelp").classList.add("hidden");
+      document.getElementById("successBox").classList.add("hidden");
+      document.getElementById("retryBtn").classList.add("hidden");
+
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
+
+      try {
+        const response = await fetch(CHECK_URL, {
+          method: "GET",
+          cache: "no-cache",
+          signal: controller.signal
+        });
+        clearTimeout(timeout);
+        if (response.ok) {
+          document.getElementById("status").textContent = "Connected!";
+          document.getElementById("successBox").classList.remove("hidden");
+        } else showWifiHelp();
+      } catch (e) {
+        clearTimeout(timeout);
+        showWifiHelp();
+      }
+
+      document.getElementById("loader").style.display = "none";
+    }
+
+    function showWifiHelp() {
+      document.getElementById("status").textContent = "Not connected!";
+      document.getElementById("wifiHelp").classList.remove("hidden");
+      document.getElementById("retryBtn").classList.remove("hidden");
+      alert("If you are connected to WiFi but still see 'Not connected', disable mobile data and try again.");
+    }
+
+    document.getElementById("retryBtn").addEventListener("click", checkConnection);
+    document.getElementById("continueBtn").addEventListener("click", () => { window.location.href = "http://192.168.4.1"; });
+    document.getElementById("openWifiBtn").addEventListener("click", () => {
+      const ua = navigator.userAgent.toLowerCase();
+      if (ua.includes("android")) window.location.href = "intent://#Intent;scheme=android.settings.WIFI_SETTINGS;end";
+      else if (ua.includes("windows")) window.location.href = "ms-settings:network-wifi";
+      else alert("Your device does not support automatic opening of WiFi settings.");
+    });
+
+    checkConnection();
+
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js");
+    }
+  </script>
+</body>
+</html>
