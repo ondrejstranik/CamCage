@@ -49,6 +49,7 @@
         const response = await fetch(CHECK_URL, {
           method: "GET",
           cache: "no-store",
+          mode: "cors",
           signal: controller.signal
         });
         clearTimeout(timeout);
