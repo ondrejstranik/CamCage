@@ -13,15 +13,16 @@
 </head>
 <body>
   <h1>CamCage</h1>
-  <p><strong>Switch on the cageCam</strong></p>
-  <p>Please ensure your device is connected to the WiFi network named <strong>"esp32"</strong>.</p>
-  <p>Please switch off the mobile phone network.</p>
+  <p><strong>Instruction</strong></p>
+  <p>1. install this webpage as PWA on your device and run it</p>
+  <p>2. connected your device to WiFi network named <strong>esp32</strong>.</p>
+  <p>3. switch off the mobile phone network.</p>
 
   <div id="message">Checking network...</div>
   <div class="note" id="statusNote"></div>
 
   <button class="btn" id="wifiBtn">Open WiFi Settings</button>
-  <a class="btn" href="http://192.168.4.1" target="_blank">CamCage</a>
+  <a class="btn" href="http://192.168.4.1" target="_blank">Run camera</a>
 
   <script>
     function checkNetwork() {
@@ -38,10 +39,10 @@
       }
 
       let statusMsg = 'Network status: ';
-      if (isWifi && isCell) statusMsg += 'Both WiFi and mobile network are active.';
-      else if (isWifi) statusMsg += 'Connected to WiFi only.';
-      else if (isCell) statusMsg += 'Connected to mobile network only.';
-      else statusMsg += 'Cannot determine network or no connection.';
+      if (isWifi && isCell) statusMsg += 'Both WiFi and mobile are active.';
+      else if (isWifi) statusMsg += 'WiFi only.';
+      else if (isCell) statusMsg += 'mobile network only.';
+      else statusMsg += 'Cannot determine or no connection.';
 
       msg.textContent = statusMsg;
     }
@@ -70,5 +71,11 @@
       }
     });
   </script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js");
+    }
+  </script>
+
 </body>
 </html>
