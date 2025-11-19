@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Network Check</title>
+  <title>CamCage</title>
   <style>
     body { font-family: sans-serif; padding: 2rem; }
     #message { margin-top: 1rem; font-size: 1.2rem; }
@@ -12,14 +12,16 @@
   </style>
 </head>
 <body>
-  <h1>Network Status</h1>
+  <h1>CamCage</h1>
+  <p><strong>Switch on the cageCam</strong></p>
   <p>Please ensure your device is connected to the WiFi network named <strong>"esp32"</strong>.</p>
+  <p>Please switch off the mobile phone network.</p>
 
   <div id="message">Checking network...</div>
   <div class="note" id="cellNote"></div>
 
   <button class="btn" id="wifiBtn">Open WiFi Settings</button>
-  <a class="btn" href="http://192.168.4.1" target="_blank">Open ESP32 Page</a>
+  <a class="btn" href="http://192.168.4.1" target="_blank">CamCage</a>
 
   <script>
     function checkNetwork() {
