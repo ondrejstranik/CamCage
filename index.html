@@ -18,7 +18,7 @@
   <p>Please switch off the mobile phone network.</p>
 
   <div id="message">Checking network...</div>
-  <div class="note" id="cellNote"></div>
+  <div class="note" id="statusNote"></div>
 
   <button class="btn" id="wifiBtn">Open WiFi Settings</button>
   <a class="btn" href="http://192.168.4.1" target="_blank">CamCage</a>
@@ -26,36 +26,43 @@
   <script>
     function checkNetwork() {
       const msg = document.getElementById('message');
-      const cellNote = document.getElementById('cellNote');
+      const statusNote = document.getElementById('statusNote');
 
-      if (!('connection' in navigator)) {
-        msg.textContent = 'Your browser does not support network detection.';
-        return;
+      let isCell = false;
+      let isWifi = false;
+
+      if ('connection' in navigator) {
+        const type = navigator.connection.type || navigator.connection.effectiveType;
+        if (type && type.includes('cell')) isCell = true;
+        if (type && type.includes('wifi')) isWifi = true;
       }
 
-      const type = navigator.connection.type || navigator.connection.effectiveType;
+      let statusMsg = 'Network status: ';
+      if (isWifi && isCell) statusMsg += 'Both WiFi and mobile network are active.';
+      else if (isWifi) statusMsg += 'Connected to WiFi only.';
+      else if (isCell) statusMsg += 'Connected to mobile network only.';
+      else statusMsg += 'Cannot determine network or no connection.';
 
-      if (type && type.includes('cell')) {
-        msg.textContent = 'You are currently on a mobile network.';
-        cellNote.textContent = 'Please switch off your cellular/mobile data and connect to WiFi (esp32).';
-      } else if (type && type.includes('wifi')) {
-        msg.textContent = 'You are on a WiFi network.';
-        cellNote.textContent = '';
-      } else {
-        msg.textContent = 'Network type could not be clearly detected.';
-        cellNote.textContent = '';
-      }
+      msg.textContent = statusMsg;
     }
 
     window.addEventListener('load', checkNetwork);
 
     document.getElementById('wifiBtn').addEventListener('click', () => {
-      const ua = navigator.userAgent.toLowerCase();
+      // Robust detection of Android, Windows, iOS
+      const ua = (navigator.userAgent || navigator.vendor || window.opera || '').toLowerCase();
       if (ua.includes('android')) {
-        window.location.href = 'intent://#Intent;scheme=android.settings.WIFI_SETTINGS;end';
+        // Android Chrome/Firefox
+        try {
+          window.location.href = 'intent://wifi/#Intent;scheme=android.settings.WIFI_SETTINGS;end';
+        } catch (e) {
+          alert('Please open WiFi settings manually on your Android device.');
+        }
       } else if (ua.includes('windows')) {
+        // Windows PC
         window.location.href = 'ms-settings:network-wifi';
       } else if (ua.includes('iphone') || ua.includes('ipad') || ua.includes('ipod')) {
+        // iOS devices
         window.location.href = 'App-Prefs:root=WIFI';
       } else {
         alert('Your device does not support automatic opening of WiFi settings. Please open it manually.');
