@@ -54,7 +54,8 @@
       if (ua.includes('android')) {
         // Android Chrome/Firefox
         try {
-          window.location.href = 'intent://wifi/#Intent;scheme=android.settings.WIFI_SETTINGS;end';
+          //window.location.href = 'intent://wifi/#Intent;scheme=android.settings.WIFI_SETTINGS;end';
+          window.location.href = "intent:#Intent;action=android.settings.WIFI_SETTINGS;end;"
         } catch (e) {
           alert('Please open WiFi settings manually on your Android device.');
         }
