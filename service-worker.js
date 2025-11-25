@@ -1,4 +1,4 @@
-const CACHE_NAME = "CamCage-v2";
+const CACHE_NAME = "CamCage-v3";
 const FILES_TO_CACHE = [
   "index.html",
   "manifest.webmanifest",
