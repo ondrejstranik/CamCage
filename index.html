@@ -5,22 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CamCage</title>
 
-<!-- PWA Manifest -->
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="stylesheet" href="styles.css">
-<link rel="canonical" href="https://github.com/ondrejstranik/CamCage/" />
-<meta name="theme-color" content="#007bff">
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/CamCage/manifest.webmanifest">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="canonical" href="https://ondrejstranik.github.io/CamCage/" />
+  <meta name="theme-color" content="#007bff">
 
-
-<!-- PWA iOS Support -->
-<link rel="apple-touch-icon" href="icons/icon.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-
-
-
-
+  <!-- PWA iOS Support -->
+  <link rel="apple-touch-icon" href="/CamCage/icons/icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
 </head>
+
 <body>
   <h1>CamCage</h1>
   <p><strong>Instruction</strong></p>
@@ -35,61 +31,15 @@
   <a class="btn" href="http://192.168.4.1" target="_blank">Run camera</a>
 
   <script>
-    function checkNetwork() {
-      const msg = document.getElementById('message');
-      const statusNote = document.getElementById('statusNote');
-
-      let isCell = false;
-      let isWifi = false;
-
-      if ('connection' in navigator) {
-        const type = navigator.connection.type || navigator.connection.effectiveType;
-        if (type && type.includes('cell')) isCell = true;
-        if (type && type.includes('wifi')) isWifi = true;
-      }
-
-      let statusMsg = 'Network status: ';
-      if (isWifi && isCell) statusMsg += 'Both WiFi and mobile are active.';
-      else if (isWifi) statusMsg += 'WiFi only.';
-      else if (isCell) statusMsg += 'mobile network only.';
-      else statusMsg += 'Cannot determine or no connection.';
-
-      msg.textContent = statusMsg;
+    if (navigator.serviceWorker) {
+      navigator.serviceWorker.register (
+        '/CamCage/sw.js',
+        {scope: '/CamCage/'}
+      )
     }
-
-    window.addEventListener('load', checkNetwork);
-
-    document.getElementById('wifiBtn').addEventListener('click', () => {
-      // Robust detection of Android, Windows, iOS
-      const ua = (navigator.userAgent || navigator.vendor || window.opera || '').toLowerCase();
-      if (ua.includes('android')) {
-        // Android Chrome/Firefox
-        try {
-          //window.location.href = 'intent://wifi/#Intent;scheme=android.settings.WIFI_SETTINGS;end';
-          window.location.href = "intent:#Intent;action=android.settings.WIFI_SETTINGS;end;"
-        } catch (e) {
-          alert('Please open WiFi settings manually on your Android device.');
-        }
-      } else if (ua.includes('windows')) {
-        // Windows PC
-        window.location.href = 'ms-settings:network-wifi';
-      } else if (ua.includes('iphone') || ua.includes('ipad') || ua.includes('ipod')) {
-        // iOS devices
-        window.location.href = 'App-Prefs:root=WIFI';
-      } else {
-        alert('Your device does not support automatic opening of WiFi settings. Please open it manually.');
-      }
-    });
   </script>
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('service-worker.js')
-        .then(reg => console.log('Service worker registered:', reg))
-        .catch(err => console.log('SW registration failed:', err));
-    });
-  }
-</script>
+
+  <script src="js/app.js"></script>
 
 </body>
 </html>

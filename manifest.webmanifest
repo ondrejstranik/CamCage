@@ -1,15 +1,15 @@
 {
   "name": "CamCage",
   "short_name": "CamCage",
-  "description": "web application for controlling esp32 camera",
-  "scope": "/",
-  "start_url": "/index.html",
-  "display": "standalone",
+  "description": "webpage for connecting esp32 camera",
+  "scope": "/CamCage/",
+  "start_url": "/CamCage/",
   "background_color": "#ffffff",
   "theme_color": "#ffffff",
+  "display": "standalone", 
   "icons": [
       {
-        "src": "icons/icon.png",
+        "src": "/CamCage/icons/icon.png",
         "type": "image/png",
         "sizes": "700x700"
       }
